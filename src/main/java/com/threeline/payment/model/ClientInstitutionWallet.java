@@ -29,4 +29,8 @@ public class ClientInstitutionWallet {
     public static ClientInstitutionWallet isInstance(String businessName, BigDecimal amount, String accountNo) {
         return new ClientInstitutionWallet(businessName, amount, accountNo);
     }
+
+    public  void deposit(BigDecimal amount){
+        this.accountBalance.add(amount);
+    }
 }

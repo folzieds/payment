@@ -32,4 +32,8 @@ public class ContractingInstitutionWallet {
         return new ContractingInstitutionWallet(name, amount,accountNo);
     }
 
+    public  void deposit(BigDecimal amount){
+        this.accountBalance.add(amount);
+    }
+
 }

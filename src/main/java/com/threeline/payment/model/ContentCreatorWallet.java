@@ -35,4 +35,29 @@ public class ContentCreatorWallet {
     private BigDecimal accountBalance;
 
 
+    private ContentCreatorWallet(String firstName, String lastName, String accountNo, String email, ClientInstitutionWallet clientInstitutionWallet, ContractingInstitutionWallet contractingInstitutionWallet, BigDecimal accountBalance) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.accountNo = accountNo;
+        this.email = email;
+        this.clientInstitutionWallet = clientInstitutionWallet;
+        this.contractingInstitutionWallet = contractingInstitutionWallet;
+        this.accountBalance = accountBalance;
+    }
+
+    public static ContentCreatorWallet instance(String firstName, String lastName, String accountNo, String email, ClientInstitutionWallet clientInstitutionWallet, ContractingInstitutionWallet contractingInstitutionWallet, BigDecimal accountBalance){
+        return new ContentCreatorWallet( firstName,  lastName,  accountNo,  email,  clientInstitutionWallet,  contractingInstitutionWallet, accountBalance);
+    }
+
+    public ClientInstitutionWallet getClientInstitutionWallet() {
+        return clientInstitutionWallet;
+    }
+
+    public ContractingInstitutionWallet getContractingInstitutionWallet() {
+        return contractingInstitutionWallet;
+    }
+
+    public  void deposit(BigDecimal amount){
+        this.accountBalance.add(amount);
+    }
 }

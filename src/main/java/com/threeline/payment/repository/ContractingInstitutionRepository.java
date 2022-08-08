@@ -12,5 +12,7 @@ public interface ContractingInstitutionRepository
     @Query(value = "select  s.account_number from ContractingInstitutionWallet s order by id desc limit 1", nativeQuery = true)
     String findLastAccountNo();
 
+    ContractingInstitutionWallet findByName(String name);
+
 
 }

@@ -102,7 +102,7 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
         String accountType = data.getAccountType();
 
         String accountNo;
-        String lastAccountNo = contractingInstitutionRepository.findLastAccountNo();
+        String lastAccountNo = clientInstitutionRepository.findLastAccountNo();
 
         if(lastAccountNo == null)
             accountNo = generateAccountNo(accountType);
@@ -125,11 +125,55 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
     }
 
     private ContentCreatorWallet MapDataToCreatorWallet(WalletData data) {
-        return null;
+        String firstname = data.getFirstname();
+        String lastname = data.getLastname();
+        String email = data.getEmail();
+        String accountType = data.getAccountType();
+
+        BigDecimal accountBalance = BigDecimal.ZERO;
+        String accountNo;
+
+
+        String lastAccountNo = contentCreatorRepository.findLastAccountNo();
+
+        if(lastAccountNo == null)
+            accountNo = generateAccountNo(accountType);
+        else
+            accountNo = String.format("%s%d",lastAccountNo.substring(0,1),Long.parseLong(lastAccountNo) + 1L);
+
+        String clientInstitutionName = data.getClientInstitutionName();
+        ClientInstitutionWallet institutionWallet = clientInstitutionRepository.findByName(clientInstitutionName);
+
+        String contractingInstitutionName = data.getContractingInstitutionName();
+        ContractingInstitutionWallet contractingInstitutionWallet = contractingInstitutionRepository.findByName(contractingInstitutionName);
+
+        ContentCreatorWallet wallet = ContentCreatorWallet.instance(firstname,  lastname,  accountNo,
+                email,  institutionWallet,  contractingInstitutionWallet, accountBalance);
+
+        return wallet;
     }
 
     @Override
     public ResponseEntity deposit(CreatorDepositData data) {
+
+        String accountNo = data.getAccountNo();
+        BigDecimal amount = data.getAmount();
+
+        BigDecimal clientAmount = amount.multiply(BigDecimal.valueOf(0.1));
+        BigDecimal contractingInstitutionAmount = amount.multiply(BigDecimal.valueOf(0.05));
+        BigDecimal contentCreatorAmount = amount.multiply(BigDecimal.valueOf(0.85));
+
+        ContentCreatorWallet wallet =  contentCreatorRepository.findByAccountNo(accountNo);
+        wallet.deposit(contentCreatorAmount);
+        contentCreatorRepository.saveAndFlush(wallet);
+
+        ClientInstitutionWallet clientInstitutionWallet = wallet.getClientInstitutionWallet();
+        clientInstitutionWallet.deposit(clientAmount);
+        clientInstitutionRepository.saveAndFlush(clientInstitutionWallet);
+
+        ContractingInstitutionWallet contractingInstitutionWallet = wallet.getContractingInstitutionWallet();
+        contractingInstitutionWallet.deposit(contractingInstitutionAmount);
+        contractingInstitutionRepository.saveAndFlush(contractingInstitutionWallet);
 
         return ResponseEntity.ok().body(Map.of("status", "success"));
     }
