@@ -1,7 +1,7 @@
 package com.threeline.payment.api;
 
 import com.threeline.payment.data.WalletData;
-import com.threeline.payment.service.WalletPaymentService;
+import com.threeline.payment.service.WalletPaymentWriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import java.util.Map;
 public class PaymentApiResource {
 
     @Autowired
-    WalletPaymentService walletPaymentService;
+    WalletPaymentWriteService walletPaymentService;
 
     @PostMapping("wallet")
     public ResponseEntity createWallet(@RequestBody WalletData data){
