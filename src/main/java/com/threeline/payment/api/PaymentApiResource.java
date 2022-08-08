@@ -32,7 +32,7 @@ public class PaymentApiResource {
     }
 
     @GetMapping("wallet")
-    public ResponseEntity fetchWallets(@RequestParam String accountType){
+    public ResponseEntity fetchWallets(@RequestParam("account_type") String accountType){
         return walletPaymentReadService.fetchAllWallets(accountType);
     }
 
