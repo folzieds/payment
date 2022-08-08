@@ -13,4 +13,5 @@ public class WalletData {
     private String lastname;
     private String email;
     private String accountType;
+    private String businessName;
 }

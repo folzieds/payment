@@ -15,9 +15,21 @@ public class ContractingInstitutionWallet {
     private String name;
 
     @Column(name = "account_balance")
-    private Double accountBalance;
+    private BigDecimal accountBalance;
 
     @Column(name = "account_no")
-    private BigDecimal accountNo;
+    private String accountNo;
+
+
+    private ContractingInstitutionWallet(String name, BigDecimal accountBalance, String accountNo) {
+        this.name = name;
+        this.accountBalance = accountBalance;
+        this.accountNo = accountNo;
+    }
+
+
+    public static ContractingInstitutionWallet isInstance(String name, BigDecimal amount, String accountNo){
+        return new ContractingInstitutionWallet(name, amount,accountNo);
+    }
 
 }
