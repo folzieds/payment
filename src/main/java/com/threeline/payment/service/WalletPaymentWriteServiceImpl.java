@@ -2,6 +2,7 @@ package com.threeline.payment.service;
 
 import com.threeline.payment.data.CreatorDepositData;
 import com.threeline.payment.data.WalletData;
+import com.threeline.payment.exception.ResourceCreationException;
 import com.threeline.payment.model.ClientInstitutionWallet;
 import com.threeline.payment.model.ContentCreatorWallet;
 import com.threeline.payment.model.ContractingInstitutionWallet;
@@ -10,6 +11,8 @@ import com.threeline.payment.repository.ClientInstitutionRepository;
 import com.threeline.payment.repository.ContentCreatorRepository;
 import com.threeline.payment.repository.ContractingInstitutionRepository;
 import com.threeline.payment.repository.WalletTransactionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,8 @@ import java.util.Map;
 
 @Service
 public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService {
+
+    private final Logger logger = LoggerFactory.getLogger(WalletPaymentWriteServiceImpl.class);
 
     private final ClientInstitutionRepository clientInstitutionRepository;
     private final ContentCreatorRepository contentCreatorRepository;
@@ -38,18 +43,19 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
 
     @Override
     public ResponseEntity create(WalletData data) {
+        logger.info("Creating wallet...");
         try{
-            if(data != null && data.getAccountType().equalsIgnoreCase("content-creator")){
-                return createContentCreator(data);
+            if(data != null && data.getAccountType().equalsIgnoreCase("contracting-institution")){
+                return createContractingInstitution(data);
+
             }else if(data != null && data.getAccountType().equalsIgnoreCase("client-institution")){
                 return createClientInstitution(data);
-            }else if(data != null && data.getAccountType().equalsIgnoreCase("contracting-institution")){
-                return createContractingInstitution(data);
+            }else{
+                return createContentCreator(data);
             }
         }catch (Exception ex){
-
+            throw new ResourceCreationException("Could not create the account...");
         }
-        return null;
     }
 
     private ResponseEntity createContractingInstitution(WalletData data) {
@@ -57,6 +63,7 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
         ContractingInstitutionWallet wallet = MapDataToContractingWallet(data);
 
         contractingInstitutionRepository.save(wallet);
+        logger.info("Contracting institution wallet successfully created");
         return ResponseEntity.ok().body(Map.of("status", "success"));
     }
 
@@ -97,6 +104,7 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
         ClientInstitutionWallet wallet = MapDataToClientWallet(data);
         clientInstitutionRepository.save(wallet);
 
+        logger.info("Client institution wallet successfully created");
         return ResponseEntity.ok().body(Map.of("status", "success"));
     }
 
@@ -124,6 +132,7 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
         ContentCreatorWallet wallet = MapDataToCreatorWallet(data);
         contentCreatorRepository.save(wallet);
 
+        logger.info("Content Creator wallet sucessfully created");
         return ResponseEntity.ok().body(Map.of("status", "success"));
     }
 

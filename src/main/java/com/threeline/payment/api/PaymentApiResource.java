@@ -26,11 +26,14 @@ public class PaymentApiResource {
         this.walletPaymentReadService = walletPaymentReadService;
     }
 
-
-
     @PostMapping("wallet")
     public ResponseEntity createWallet(@RequestBody WalletData data){
         return walletPaymentWriteService.create(data);
+    }
+
+    @GetMapping("wallet")
+    public ResponseEntity fetchWallets(@RequestParam String accountType){
+        return walletPaymentReadService.fetchAllWallets(accountType);
     }
 
     @PostMapping("deposit")
@@ -40,7 +43,7 @@ public class PaymentApiResource {
 
     @GetMapping("transactions")
     public ResponseEntity transactions(){
-        List<WalletTransaction> transactions = walletPaymentReadService.fetchAll();
+        List<WalletTransaction> transactions = walletPaymentReadService.fetchAllTransactions();
 
         return ResponseEntity.ok()
                 .body(Map.of("status", "Success", "data", transactions));
