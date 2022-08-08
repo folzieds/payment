@@ -62,4 +62,16 @@ public class ContentCreatorWallet {
     public  void deposit(BigDecimal amount){
         this.accountBalance.add(amount);
     }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
 }

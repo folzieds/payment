@@ -41,4 +41,8 @@ public class ClientInstitutionWallet {
     public String getAccountNo() {
         return accountNo;
     }
+
+    public String getName() {
+        return name;
+    }
 }

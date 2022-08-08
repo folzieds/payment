@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreatorDepositData {
+public class WalletResponseData {
 
+    private String name;
     private String accountNo;
-    private BigDecimal amount;
-    private String description;
 }

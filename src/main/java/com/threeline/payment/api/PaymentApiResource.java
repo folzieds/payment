@@ -1,8 +1,8 @@
 package com.threeline.payment.api;
 
-import com.threeline.payment.data.CreatorDepositData;
+import com.threeline.payment.data.WalletDepositData;
 import com.threeline.payment.data.WalletData;
-import com.threeline.payment.model.WalletTransaction;
+import com.threeline.payment.data.WalletTransactionResponseData;
 import com.threeline.payment.service.WalletPaymentReadService;
 import com.threeline.payment.service.WalletPaymentWriteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +37,13 @@ public class PaymentApiResource {
     }
 
     @PostMapping("deposit")
-    public ResponseEntity deposit(@RequestBody CreatorDepositData data){
+    public ResponseEntity deposit(@RequestBody WalletDepositData data){
         return walletPaymentWriteService.deposit(data);
     }
 
     @GetMapping("transactions")
     public ResponseEntity transactions(){
-        List<WalletTransaction> transactions = walletPaymentReadService.fetchAllTransactions();
+        List<WalletTransactionResponseData> transactions = walletPaymentReadService.fetchAllTransactions();
 
         return ResponseEntity.ok()
                 .body(Map.of("status", "Success", "data", transactions));

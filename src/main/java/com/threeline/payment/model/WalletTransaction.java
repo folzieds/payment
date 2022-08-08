@@ -35,4 +35,20 @@ public class WalletTransaction {
     public static WalletTransaction build(BigDecimal amount, String accountNo, String transactionType, String description){
         return new WalletTransaction(amount, accountNo, transactionType, description);
     }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

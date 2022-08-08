@@ -1,6 +1,6 @@
 package com.threeline.payment.service;
 
-import com.threeline.payment.data.CreatorDepositData;
+import com.threeline.payment.data.WalletDepositData;
 import com.threeline.payment.data.WalletData;
 import com.threeline.payment.exception.ResourceCreationException;
 import com.threeline.payment.model.ClientInstitutionWallet;
@@ -45,13 +45,15 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
     public ResponseEntity create(WalletData data) {
         logger.info("Creating wallet...");
         try{
-            if(data != null && data.getAccountType().equalsIgnoreCase("contracting-institution")){
+            if(data != null && data.getAccountType() != null && data.getAccountType().equalsIgnoreCase("contracting")){
                 return createContractingInstitution(data);
 
-            }else if(data != null && data.getAccountType().equalsIgnoreCase("client-institution")){
+            }else if(data != null && data.getAccountType() != null && data.getAccountType().equalsIgnoreCase("client")){
                 return createClientInstitution(data);
-            }else{
+            }else if(data != null && data.getAccountType() != null && data.getAccountType().equalsIgnoreCase("creator")){
                 return createContentCreator(data);
+            }else{
+                throw new ResourceCreationException("Account Type not passed");
             }
         }catch (Exception ex){
             throw new ResourceCreationException("Could not create the account...");
@@ -89,9 +91,9 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
     private String generateAccountNo(String accountType) {
         Long number = Math.round(Math.random() * 1000000000);
         StringBuilder accountNo = new StringBuilder(10);
-        if(accountType.equalsIgnoreCase("contracting-institution")){
+        if(accountType.equalsIgnoreCase("contracting")){
             accountNo.append(String.format("2%d", number));
-        }else if(accountType.equalsIgnoreCase("client-institution")) {
+        }else if(accountType.equalsIgnoreCase("client")) {
             accountNo.append(String.format("3%d", number));
         }else{
             accountNo.append(String.format("1%d", number));
@@ -166,7 +168,7 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
     }
 
     @Override
-    public ResponseEntity deposit(CreatorDepositData data) {
+    public ResponseEntity deposit(WalletDepositData data) {
 
         String accountNo = data.getAccountNo();
         BigDecimal amount = data.getAmount();
