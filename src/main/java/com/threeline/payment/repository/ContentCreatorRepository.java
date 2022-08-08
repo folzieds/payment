@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ContentCreatorRepository
         extends JpaRepository<ContentCreatorWallet, Long>, JpaSpecificationExecutor<ContentCreatorWallet> {
 
-    @Query(value = "select  s.account_number from ContentCreatorWallet s order by id desc limit 1", nativeQuery = true)
+    @Query(value = "select  s.account_number from content_creator_wallet s order by id desc limit 1", nativeQuery = true)
     String findLastAccountNo();
 
     ContentCreatorWallet findByAccountNo(String accountNo);
