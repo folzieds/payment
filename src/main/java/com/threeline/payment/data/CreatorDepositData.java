@@ -13,4 +13,5 @@ public class CreatorDepositData {
 
     private String accountNo;
     private BigDecimal amount;
+    private String description;
 }

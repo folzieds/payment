@@ -5,9 +5,11 @@ import com.threeline.payment.data.WalletData;
 import com.threeline.payment.model.ClientInstitutionWallet;
 import com.threeline.payment.model.ContentCreatorWallet;
 import com.threeline.payment.model.ContractingInstitutionWallet;
+import com.threeline.payment.model.WalletTransaction;
 import com.threeline.payment.repository.ClientInstitutionRepository;
 import com.threeline.payment.repository.ContentCreatorRepository;
 import com.threeline.payment.repository.ContractingInstitutionRepository;
+import com.threeline.payment.repository.WalletTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,18 +21,19 @@ import java.util.Map;
 public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService {
 
     private final ClientInstitutionRepository clientInstitutionRepository;
-
     private final ContentCreatorRepository contentCreatorRepository;
-
     private final ContractingInstitutionRepository contractingInstitutionRepository;
+    private final WalletTransactionRepository walletTransactionRepository;
 
     @Autowired
     public WalletPaymentWriteServiceImpl(ClientInstitutionRepository clientInstitutionRepository,
                                          ContentCreatorRepository contentCreatorRepository,
-                                         ContractingInstitutionRepository contractingInstitutionRepository) {
+                                         ContractingInstitutionRepository contractingInstitutionRepository,
+                                         WalletTransactionRepository walletTransactionRepository) {
         this.clientInstitutionRepository = clientInstitutionRepository;
         this.contentCreatorRepository = contentCreatorRepository;
         this.contractingInstitutionRepository = contractingInstitutionRepository;
+        this.walletTransactionRepository = walletTransactionRepository;
     }
 
     @Override
@@ -167,13 +170,25 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
         wallet.deposit(contentCreatorAmount);
         contentCreatorRepository.saveAndFlush(wallet);
 
+        WalletTransaction contentCreatorTransaction = WalletTransaction.build(contentCreatorAmount,
+                accountNo, "deposit", data.getDescription());
+        walletTransactionRepository.save(contentCreatorTransaction);
+
         ClientInstitutionWallet clientInstitutionWallet = wallet.getClientInstitutionWallet();
         clientInstitutionWallet.deposit(clientAmount);
         clientInstitutionRepository.saveAndFlush(clientInstitutionWallet);
 
+        WalletTransaction clientInstitutionTransaction = WalletTransaction.build(clientAmount,
+                clientInstitutionWallet.getAccountNo(), "Charge", "Client Institution Charge");
+        walletTransactionRepository.save(clientInstitutionTransaction);
+
         ContractingInstitutionWallet contractingInstitutionWallet = wallet.getContractingInstitutionWallet();
         contractingInstitutionWallet.deposit(contractingInstitutionAmount);
         contractingInstitutionRepository.saveAndFlush(contractingInstitutionWallet);
+
+        WalletTransaction contractingInstitutionTransaction = WalletTransaction.build(contractingInstitutionAmount,
+                contractingInstitutionWallet.getAccountNo(), "Charge", "Contracting Institution Charge");
+        walletTransactionRepository.save(contractingInstitutionTransaction);
 
         return ResponseEntity.ok().body(Map.of("status", "success"));
     }

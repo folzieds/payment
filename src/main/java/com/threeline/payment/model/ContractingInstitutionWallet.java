@@ -27,6 +27,8 @@ public class ContractingInstitutionWallet {
         this.accountNo = accountNo;
     }
 
+    protected ContractingInstitutionWallet() {}
+
 
     public static ContractingInstitutionWallet isInstance(String name, BigDecimal amount, String accountNo){
         return new ContractingInstitutionWallet(name, amount,accountNo);
@@ -36,4 +38,7 @@ public class ContractingInstitutionWallet {
         this.accountBalance.add(amount);
     }
 
+    public String getAccountNo() {
+        return accountNo;
+    }
 }

@@ -20,11 +20,15 @@ public class ClientInstitutionWallet {
     @Column(name = "account_no")
     private String accountNo;
 
+
+
     private ClientInstitutionWallet(String name, BigDecimal accountBalance, String accountNo) {
         this.name = name;
         this.accountBalance = accountBalance;
         this.accountNo = accountNo;
     }
+
+    protected ClientInstitutionWallet() {}
 
     public static ClientInstitutionWallet isInstance(String businessName, BigDecimal amount, String accountNo) {
         return new ClientInstitutionWallet(businessName, amount, accountNo);
@@ -32,5 +36,9 @@ public class ClientInstitutionWallet {
 
     public  void deposit(BigDecimal amount){
         this.accountBalance.add(amount);
+    }
+
+    public String getAccountNo() {
+        return accountNo;
     }
 }

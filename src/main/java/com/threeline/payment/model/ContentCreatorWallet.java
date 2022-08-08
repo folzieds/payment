@@ -34,6 +34,8 @@ public class ContentCreatorWallet {
     @Column(name = "account_balance")
     private BigDecimal accountBalance;
 
+    protected ContentCreatorWallet(){}
+
 
     private ContentCreatorWallet(String firstName, String lastName, String accountNo, String email, ClientInstitutionWallet clientInstitutionWallet, ContractingInstitutionWallet contractingInstitutionWallet, BigDecimal accountBalance) {
         this.firstName = firstName;
