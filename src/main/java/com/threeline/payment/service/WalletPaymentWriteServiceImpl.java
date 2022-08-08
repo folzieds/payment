@@ -10,6 +10,21 @@ public class WalletPaymentWriteServiceImpl implements WalletPaymentWriteService 
 
     @Override
     public ResponseEntity create(WalletData data) {
+        try{
+            if(data != null && data.getAccountType().equalsIgnoreCase("content-creator")){
+                return createContentCreator(data);
+            }else if(data != null && data.getAccountType().equalsIgnoreCase("client")){
+                return createContentCreator(data);
+            }else if(data != null && data.getAccountType().equalsIgnoreCase("")){
+                return createContentCreator(data);
+            }
+        }catch (Exception ex){
+
+        }
+        return null;
+    }
+
+    private ResponseEntity createContentCreator(WalletData data) {
         return null;
     }
 

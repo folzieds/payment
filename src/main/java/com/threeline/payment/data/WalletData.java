@@ -12,4 +12,5 @@ public class WalletData {
     private String firstname;
     private String lastname;
     private String email;
+    private String accountType;
 }
